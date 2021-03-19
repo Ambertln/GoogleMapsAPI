@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Curso HTML5</title>
+    <style>
+        #mapa {
+            width: 820px;
+            height: 820px;
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <script>
+        var infowindow = new google.maps.infowindow();
+
+        function mostrarMapa() {
+            if (navigator.Geolocation) {
+                navigator.geolocation.getCurrentPosition(sucesso, erro);
+            } else {
+                alert("Este Navegador não suporta a funcionalidade Geolocation");
+            }
+        }
+
+
+        function erro(err) {
+            switch (err.code) {
+                case 1:
+                    var mensagemErro = "Permissão negada.";
+                    break;
+                case 2:
+                    var mensagemErro = "Não foi possível estabelecer uma conexão.";
+                    break;
+                case 3:
+                    var mensagemErro = "Tempo Esgotado.";
+                    break;
+                default:
+                    var mensagemErro = "Não foi possível obter a sua posição.";
+            }
+            var codigoErro = err.code;
+            var mensagem = "Ocorreu um erro na determinação da posição: <br>";
+            mensagem += "Código do erro: " + codigoErro + "<br>";
+            mensagem += "Mensagem: " + mensagemErro;
+            document.getElementById('msg').innerHTML = mensagem;
+        }
+
+        function sucesso(position) {
+            var mapa = document.getElementById("mapa");
+            mapa.style.display = "block";
+            var opcoes = {
+                zoom: 15,
+                mapTypeID: google.maps.mapTypeID.roadmap
+            }
+            var map = new google.maps.Map(document.getElementById("mapa"), opcoes);
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            var local = new google.maps.LatLng(latitude, longitude);
+            contentString = "<br>Achei você!!!";
+            map.setCenter(local);
+            infowindow.setContent(contentString);
+            infowindow.setposition(local);
+            infowindow.open(map);
+            /*
+                        var url = "http://maps.google.com/maps/api/staticmap?center=";
+                        url += latitude + "," + longitude;
+                        url += "&zoom=15&size=400x400";
+                        url += "markers=color:red|" + latitude + "," + longitude;
+                        url += "&sensor = true";
+                        mapa.src = url;
+                        mapa.style.display = "block";*/
+
+        }
+        /*var positionID = navigator.geolocation.watchPosition(sucesso, erro, (enableHighAccuracy: true));
+
+
+
+
+        function pararPosicionamento() {
+            botao.onclick = function() {
+                clearWatch(positionID);
+            }
+        }*/
+    </script>
+
+
+</head>
+
+
+<body>
+    <div id="tudo">
+        <header>
+            <h1>Exemplo Mapa Dinâmico</h1>
+        </header>
+        <section>
+            <p> <input type="button" value="Clique para Mostrar sua posição no mapa" onclick="mostrarMapa()"> </p>
+        </section>
+        <section>
+            <div id="mapa"></div>
+        </section>
+
+
+    </div>
+
+</body>
+
+</html>
